@@ -121,16 +121,6 @@ Constraints:
 | 8 | Fractional Knapsack | Python | Greedy Algorithm |
 | 9 | String Matching | Python | Pattern Searching |
 
----
-
-## 🛠️ Tools and Technologies
-
-- **C++** (Part A)  
-  - Compiler: GCC / g++  
-  - IDE: Code::Blocks / VS Code  
-- **Python 3.x** (Part B)  
-  - IDE: VS Code / PyCharm / Jupyter Notebook  
-- **OS:** Windows / Linux / macOS  
 
 ---
 
