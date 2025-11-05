@@ -23,7 +23,9 @@ for u, nbrs in graph.items():
 edges.sort(key=lambda x: x[2])
 
 # --- 4) Simple union-find (parent dict) like your example
-parent = {node: node for node in graph.keys()}
+parent = {}
+for n in graph.keys():
+    parent[n] = n
 
 def find(node):
     # simple find (no recursion, no path compression) to match your style
