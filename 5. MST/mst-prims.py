@@ -1,53 +1,47 @@
-# Simple Prim's Algorithm Example
-# College Campus Graph - Minimum Spanning Tree (MST)
+# prims_from_adjacency.py
+# Simple Prim's algorithm that starts from an adjacency list (undirected graph).
 
-# Departments (Nodes)
-nodes = ["CS", "EE", "ME", "Library"]
+# --- 1) Define graph as adjacency list: node -> [(neighbor, distance), ...]
+graph = {
+    "CS":      [("EE", 10), ("ME", 6), ("Library", 5)],
+    "EE":      [("CS", 10), ("Library", 15)],
+    "ME":      [("CS", 6),  ("Library", 4)],
+    "Library": [("CS", 5),  ("EE", 15), ("ME", 4)]
+}
 
-# Connections (Edges: from, to, distance)
-edges = [
-    ("CS", "EE", 10),
-    ("CS", "ME", 6),
-    ("CS", "Library", 5),
-    ("EE", "Library", 15),
-    ("ME", "Library", 4)
-]
+# --- 2) Choose a starting node (any node works, say "CS")
+start = "CS"
 
-# Build adjacency map for easy lookups
-adj = {n: [] for n in nodes}
-for u, v, w in edges:
-    adj[u].append((v, w))
-    adj[v].append((u, w))
+# --- 3) Keep track of visited nodes
+visited = set([start])
 
-# Prim's algorithm (simple, no heap)
-start = nodes[0]          # start from the first node (CS)
-visited = {start}         # set of nodes already in MST
-mst = []                  # list of edges in MST
+# --- 4) List to store edges in MST and total weight
+mst = []
 total_weight = 0
 
-# Repeat until all nodes are visited
-while len(visited) < len(nodes):
-    # find the smallest edge that connects visited -> not visited
-    best_edge = None  # will hold (u, v, w)
-    best_w = float('inf')
+# --- 5) While MST not complete (i.e., not all nodes visited)
+while len(visited) < len(graph):
+    min_edge = None
+    min_weight = float('inf')
 
+    # Loop through all visited nodes and their neighbors
     for u in visited:
-        for v, w in adj[u]:
-            if v not in visited and w < best_w:
-                best_w = w
-                best_edge = (u, v, w)
+        for v, w in graph[u]:
+            # Pick smallest edge that connects to an unvisited node
+            if v not in visited and w < min_weight:
+                min_weight = w
+                min_edge = (u, v, w)
 
-    if best_edge is None:
-        # graph not fully connected
-        break
+    # Add the chosen edge to MST
+    if min_edge:
+        u, v, w = min_edge
+        mst.append(min_edge)
+        total_weight += w
+        visited.add(v)
 
-    u, v, w = best_edge
-    visited.add(v)
-    mst.append((u, v, w))
-    total_weight += w
-
-# Print result
-print("Edges in Minimum Spanning Tree (Prim):")
+# --- 6) Print result
+print("Edges in Minimum Spanning Tree:")
 for u, v, w in mst:
     print(f"{u} -- {v} : {w}")
+
 print("Total Distance =", total_weight)
