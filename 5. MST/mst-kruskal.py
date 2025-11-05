@@ -1,50 +1,52 @@
-# Simple Kruskal's Algorithm Example
-# College Campus Graph - Minimum Spanning Tree (MST)
+# kruskal_from_adjacency.py
+# Simple Kruskal's algorithm that starts from an adjacency list (undirected graph).
 
-# Departments (Nodes)
-nodes = ["CS", "EE", "ME", "Library"]
+# --- 1) Define graph as adjacency list: node -> [(neighbor, distance), ...]
+graph = {
+    "CS":      [("EE", 10), ("ME", 6), ("Library", 5)],
+    "EE":      [("CS", 10), ("Library", 15)],
+    "ME":      [("CS", 6),  ("Library", 4)],
+    "Library": [("CS", 5),  ("EE", 15), ("ME", 4)]
+}
 
-# Connections between them (Edges: from, to, distance)
-edges = [
-    ("CS", "EE", 10),
-    ("CS", "ME", 6),
-    ("CS", "Library", 5),
-    ("EE", "Library", 15),
-    ("ME", "Library", 4)
-]
+# --- 2) Convert adjacency list to an edge list (avoid duplicate edges)
+edges = []
+seen = set()
+for u, nbrs in graph.items():
+    for v, w in nbrs:
+        key = tuple(sorted((u, v)))
+        if key not in seen:
+            edges.append((u, v, w))
+            seen.add(key)
 
-# Step 1: Sort all edges by distance (smallest first)
+# --- 3) Sort edges by weight (smallest first)
 edges.sort(key=lambda x: x[2])
 
-# Step 2: Create a parent dictionary for union-find
-parent = {}
-for n in nodes:
-    parent[n] = n
+# --- 4) Simple union-find (parent dict) like your example
+parent = {node: node for node in graph.keys()}
 
-# Function to find root of a node
 def find(node):
+    # simple find (no recursion, no path compression) to match your style
     while parent[node] != node:
         node = parent[node]
     return node
 
-# Function to join two sets
-def union(node1, node2):
-    root1 = find(node1)
-    root2 = find(node2)
-    parent[root2] = root1
+def union(a, b):
+    root_a = find(a)
+    root_b = find(b)
+    parent[root_b] = root_a
 
-# Step 3: Kruskal’s Algorithm
-mst = []   # to store final MST edges
+# --- 5) Kruskal's algorithm
+mst = []
 total_weight = 0
 
 for u, v, w in edges:
-    # If including this edge doesn’t cause a cycle
     if find(u) != find(v):
         union(u, v)
         mst.append((u, v, w))
         total_weight += w
 
-# Step 4: Print result
+# --- 6) Print result
 print("Edges in Minimum Spanning Tree:")
 for u, v, w in mst:
     print(f"{u} -- {v} : {w}")
